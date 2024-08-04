@@ -24,10 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const lyricsDisplay = document.getElementById('lyrics');
     const trackTitle = document.getElementById('track-title');
     const artist = document.getElementById('artist');
+    const album = document.getElementById('album');
+    const releaseDate = document.getElementById('release-date');
     const nowPlayingTrack = document.getElementById('now-playing-track');
     const sortPlaylistBtn = document.getElementById('sort-playlist');
     const removeSelectedBtn = document.getElementById('remove-selected');
     const albumArt = document.getElementById('album-art');
+    const miniPlayPauseBtn = document.getElementById('mini-play-pause');
+    const miniNextBtn = document.getElementById('mini-next');
+    const miniAlbumArt = document.getElementById('mini-album-art');
+    const miniTrackTitle = document.getElementById('mini-track-title');
     const ctx = visualizerCanvas.getContext('2d');
 
     let audio = new Audio();
@@ -47,9 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
             audio.src = song.getAttribute('data-src');
             trackTitle.textContent = song.textContent;
             artist.textContent = 'Artist Name'; // Placeholder
+            album.textContent = 'Album Name'; // Placeholder
+            releaseDate.textContent = 'Release Date'; // Placeholder
             lyricsDisplay.textContent = 'No lyrics available'; // Placeholder
             nowPlayingTrack.textContent = song.textContent;
-            albumArt.src = 'default-art.jpg'; // Placeholder; you might update this dynamically
+            albumArt.src = 'default-art.jpg'; // Placeholder
+            miniAlbumArt.src = 'default-art.jpg'; // Placeholder
+            miniTrackTitle.textContent = song.textContent;
             audio.load();
             updateUI();
         }
@@ -59,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.play();
         isPlaying = true;
         playPauseBtn.textContent = 'Pause';
+        miniPlayPauseBtn.textContent = 'Pause';
         startVisualization();
     };
 
@@ -66,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.pause();
         isPlaying = false;
         playPauseBtn.textContent = 'Play';
+        miniPlayPauseBtn.textContent = 'Play';
         stopVisualization();
     };
 
@@ -74,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.currentTime = 0;
         isPlaying = false;
         playPauseBtn.textContent = 'Play';
+        miniPlayPauseBtn.textContent = 'Play';
         stopVisualization();
     };
 
@@ -109,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playlist.children.forEach((item, idx) => {
             item.classList.toggle('playing', idx === currentIndex);
         });
+        miniTrackTitle.textContent = playlist.children[currentIndex]?.textContent || 'Track Title';
     };
 
     const updateTimeDisplay = () => {
@@ -177,25 +191,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const changeTheme = (theme) => {
         document.body.classList.toggle('light', theme === 'light');
-        document.body.classList.toggle('dark-mode', theme === 'dark');
+        document.body.classList.toggle('dark', theme === 'dark');
     };
 
     const changeSpeed = (speed) => {
         audio.playbackRate = speed;
     };
 
-    const changeBalance = (balance) => {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            source = audioContext.createMediaElementSource(audio);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
+    const changeBalance = (value) => {
+        if (audioContext) {
+            const panNode = audioContext.createStereoPanner();
+            panNode.pan.value = parseFloat(value);
+            source.connect(panNode);
+            panNode.connect(analyser);
         }
-        const panNode = audioContext.createStereoPanner();
-        source.connect(panNode);
-        panNode.connect(audioContext.destination);
-        panNode.pan.value = balance;
     };
 
     const sortPlaylist = () => {
@@ -206,23 +215,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const removeSelected = () => {
-        const selected = Array.from(playlist.querySelectorAll('li.selected'));
-        selected.forEach(song => playlist.removeChild(song));
-        if (playlist.children.length > 0) {
-            loadSong(currentIndex);
-        } else {
-            trackTitle.textContent = 'Track Title';
-            artist.textContent = 'Artist Name';
-            lyricsDisplay.textContent = 'No lyrics available';
-            nowPlayingTrack.textContent = 'None';
-            albumArt.src = 'default-art.jpg'; // Placeholder
-        }
+        Array.from(playlist.children).forEach(song => {
+            if (song.classList.contains('selected')) {
+                playlist.removeChild(song);
+            }
+        });
     };
 
     const toggleDarkMode = () => {
-        document.body.classList.toggle('dark-mode');
+        document.body.classList.toggle('dark');
     };
 
+    // Event listeners
     playPauseBtn.addEventListener('click', () => {
         if (isPlaying) {
             pauseSong();
@@ -247,9 +251,12 @@ document.addEventListener('DOMContentLoaded', () => {
     sortPlaylistBtn.addEventListener('click', sortPlaylist);
     removeSelectedBtn.addEventListener('click', removeSelected);
     document.querySelector('#dark-mode-toggle').addEventListener('click', toggleDarkMode);
-
-    // Initialize UI
-    changeTheme(themeSelect.value);
-    changeSpeed(speedInput.value);
-    changeBalance(balanceControl.value);
+    miniPlayPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            pauseSong();
+        } else {
+            playSong();
+        }
+    });
+    miniNextBtn.addEventListener('click', nextSong);
 });

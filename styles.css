@@ -1,4 +1,4 @@
-/* Enhanced CSS for Version 9 */
+/* Enhanced CSS for Version 10 */
 
 /* Body and player container styles */
 body {
@@ -51,23 +51,66 @@ body.light button {
     transform: scale(1.05);
 }
 
-/* Control buttons */
-button {
-    background: linear-gradient(135deg, #4caf50, #388e3c);
-    border: none;
-    padding: 14px 28px;
-    margin: 5px;
-    cursor: pointer;
-    font-size: 20px;
+/* Mini player */
+.mini-player {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
     border-radius: 10px;
-    color: #fff;
-    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 400px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-button:hover {
+#mini-album-art {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.mini-controls {
+    display: flex;
+    align-items: center;
+}
+
+.mini-controls button {
+    background: linear-gradient(135deg, #4caf50, #388e3c);
+    border: none;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px;
+    color: #fff;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.mini-controls button:hover {
     background: linear-gradient(135deg, #388e3c, #4caf50);
     transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Track info */
+.track-info {
+    margin-top: 20px;
+}
+
+.track-info h3 {
+    font-size: 24px;
+    margin: 5px 0;
+}
+
+.track-info p {
+    font-size: 18px;
+    margin: 5px 0;
 }
 
 /* Volume and progress bars */
@@ -112,65 +155,28 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 #playlist {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 #playlist li {
-    padding: 15px;
+    padding: 10px;
     cursor: pointer;
-    border-bottom: 1px solid #444;
+    border-radius: 5px;
     transition: background 0.3s, color 0.3s;
 }
 
-#playlist li:hover,
 #playlist li.playing {
     background: #4caf50;
-    color: #000;
-}
-
-/* Playlist controls */
-.playlist-controls {
-    margin-top: 20px;
-}
-
-#sort-playlist,
-#remove-selected {
-    background: linear-gradient(135deg, #ff5722, #e64a19);
-    border: none;
-    padding: 14px;
-    cursor: pointer;
-    border-radius: 10px;
     color: #fff;
-    transition: background 0.3s, transform 0.2s;
 }
 
-#sort-playlist:hover,
-#remove-selected:hover {
-    background: linear-gradient(135deg, #e64a19, #ff5722);
-    transform: scale(1.1);
-}
-
-/* Now playing */
-.now-playing {
-    margin-top: 20px;
-    font-size: 18px;
-}
-
-/* Lyrics display */
-.lyrics-display {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #444;
-    border-radius: 10px;
-    background: #222;
-}
-
-.lyrics-display h2 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: bold;
+#playlist li:hover {
+    background: #333;
+    color: #fff;
 }
 
 /* Settings panel */
@@ -186,13 +192,15 @@ input[type='range']::-webkit-slider-thumb:hover {
     z-index: 10;
 }
 
-/* Dark mode toggle */
-body.dark-mode {
-    background: #121212;
+.settings-panel label {
+    display: block;
+    margin: 10px 0 5px;
 }
 
-body.dark-mode .player {
-    background: #1e1e1e;
+.settings-panel select,
+.settings-panel input {
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 /* Responsive design */
@@ -204,5 +212,15 @@ body.dark-mode .player {
     #album-art {
         width: 200px;
         height: 200px;
+    }
+
+    .mini-player {
+        max-width: 100%;
+        flex-direction: column;
+    }
+
+    #mini-album-art {
+        width: 50px;
+        height: 50px;
     }
 }
