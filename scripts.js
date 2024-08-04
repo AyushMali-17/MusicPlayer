@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const playPauseBtn = document.getElementById('play-pause');
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
     const stopBtn = document.getElementById('stop');
+    const nextBtn = document.getElementById('next');
+    const prevBtn = document.getElementById('prev');
     const muteBtn = document.getElementById('mute');
     const shuffleBtn = document.getElementById('shuffle');
     const repeatBtn = document.getElementById('repeat');
@@ -10,28 +10,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.getElementById('progress');
     const currentTimeDisplay = document.getElementById('current-time');
     const totalTimeDisplay = document.getElementById('total-time');
-    const playlist = document.getElementById('playlist');
-    const visualizerCanvas = document.getElementById('visualizer');
-    const ctx = visualizerCanvas.getContext('2d');
-    const addSongBtn = document.getElementById('add-song');
     const fileInput = document.getElementById('file-input');
-    const settingsBtn = document.getElementById('settings');
+    const playlist = document.getElementById('playlist');
+    const addSongBtn = document.getElementById('add-song');
     const settingsPanel = document.getElementById('settings-panel');
+    const settingsBtn = document.getElementById('settings');
     const themeSelect = document.getElementById('theme');
     const speedInput = document.getElementById('speed');
     const balanceControl = document.getElementById('audio-balance');
+    const visualizerCanvas = document.getElementById('visualizer');
+    const lyricsDisplay = document.getElementById('lyrics');
+    const trackTitle = document.getElementById('track-title');
+    const artist = document.getElementById('artist');
+    const ctx = visualizerCanvas.getContext('2d');
 
     let audio = new Audio();
-    let currentIndex = 0;
     let isPlaying = false;
+    let isMuted = false;
     let isShuffling = false;
     let isRepeating = false;
-    let audioContext, analyser, source, bufferLength, dataArray;
+    let currentIndex = 0;
+    let audioContext, analyser, source;
+    let bufferLength, dataArray;
+    const visualizerCanvasWidth = visualizerCanvas.width;
+    const visualizerCanvasHeight = visualizerCanvas.height;
 
     const loadSong = (index) => {
-        audio.src = playlist.children[index].getAttribute('data-src');
-        audio.load();
-        updatePlaylistUI(index);
+        const song = playlist.children[index];
+        if (song) {
+            audio.src = song.getAttribute('data-src');
+            trackTitle.textContent = song.textContent;
+            artist.textContent = 'Artist Name'; // Placeholder
+            lyricsDisplay.textContent = 'No lyrics available'; // Placeholder
+            audio.load();
+            updateUI();
+        }
     };
 
     const playSong = () => {
@@ -56,42 +69,37 @@ document.addEventListener('DOMContentLoaded', () => {
         stopVisualization();
     };
 
-    const muteSong = () => {
-        audio.muted = !audio.muted;
-        muteBtn.textContent = audio.muted ? 'Unmute' : 'Mute';
-    };
-
     const nextSong = () => {
-        if (isShuffling) {
-            currentIndex = Math.floor(Math.random() * playlist.children.length);
-        } else {
-            currentIndex = (currentIndex + 1) % playlist.children.length;
-        }
+        currentIndex = (currentIndex + 1) % playlist.children.length;
         loadSong(currentIndex);
-        if (isPlaying) playSong();
+        playSong();
     };
 
     const prevSong = () => {
         currentIndex = (currentIndex - 1 + playlist.children.length) % playlist.children.length;
         loadSong(currentIndex);
-        if (isPlaying) playSong();
+        playSong();
+    };
+
+    const muteSong = () => {
+        isMuted = !isMuted;
+        audio.muted = isMuted;
+        muteBtn.textContent = isMuted ? 'Unmute' : 'Mute';
     };
 
     const toggleShuffle = () => {
         isShuffling = !isShuffling;
         shuffleBtn.classList.toggle('active', isShuffling);
-        shuffleBtn.classList.add('pulse');
     };
 
     const toggleRepeat = () => {
         isRepeating = !isRepeating;
         repeatBtn.classList.toggle('active', isRepeating);
-        repeatBtn.classList.add('pulse');
     };
 
-    const updatePlaylistUI = (index) => {
-        Array.from(playlist.children).forEach((item, idx) => {
-            item.classList.toggle('playing', idx === index);
+    const updateUI = () => {
+        playlist.children.forEach((item, idx) => {
+            item.classList.toggle('playing', idx === currentIndex);
         });
     };
 
@@ -130,14 +138,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         analyser.getByteFrequencyData(dataArray);
         ctx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
-        const barWidth = (visualizerCanvas.width / bufferLength) * 2.5;
+        const barWidth = (visualizerCanvasWidth / bufferLength) * 2.5;
         let barHeight;
         let x = 0;
 
         for (let i = 0; i < bufferLength; i++) {
             barHeight = dataArray[i] / 2;
             ctx.fillStyle = `rgb(${barHeight + 100},50,50)`;
-            ctx.fillRect(x, visualizerCanvas.height - barHeight / 2, barWidth, barHeight);
+            ctx.fillRect(x, visualizerCanvasHeight - barHeight / 2, barWidth, barHeight);
             x += barWidth + 1;
         }
     };
@@ -243,10 +251,23 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSong(currentIndex);
     updateTimeDisplay();
 
-    // Add some animations for UI elements
-    document.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('transitionend', () => {
-            btn.classList.remove('pulse');
+    // Advanced animations and visual effects
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('mouseover', () => {
+            button.style.transform = 'scale(1.1)';
+        });
+        button.addEventListener('mouseout', () => {
+            button.style.transform = 'scale(1)';
+        });
+    });
+
+    // Highlighting active controls
+    [playPauseBtn, stopBtn, nextBtn, prevBtn].forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.controls button').forEach(button => {
+                button.classList.remove('active');
+            });
+            btn.classList.add('active');
         });
     });
 });

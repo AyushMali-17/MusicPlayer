@@ -1,9 +1,6 @@
 /* Enhanced CSS for advanced visuals */
 
 /* Body and player container styles */
-
-
-
 body {
     font-family: 'Arial', sans-serif;
     display: flex;
@@ -11,38 +8,38 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #1c1c1c;
+    background: radial-gradient(circle, #1c1c1c, #000);
     color: #f1f1f1;
 }
 
 .player {
     width: 90%;
-    max-width: 700px;
+    max-width: 800px;
     text-align: center;
     padding: 20px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-    border-radius: 15px;
-    background: linear-gradient(135deg, #3a3a3a, #1c1c1c);
-    border: 1px solid #444;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    background: linear-gradient(135deg, #2a2a2a, #1c1c1c);
     position: relative;
 }
 
 /* Control buttons */
 button {
-    background: linear-gradient(135deg, #61dafb, #21a1f1);
+    background: linear-gradient(135deg, #4caf50, #388e3c);
     border: none;
-    padding: 12px 24px;
+    padding: 14px 28px;
     margin: 5px;
     cursor: pointer;
-    font-size: 18px;
-    border-radius: 8px;
+    font-size: 20px;
+    border-radius: 10px;
     color: #fff;
-    transition: background 0.3s, transform 0.2s;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
 button:hover {
-    background: linear-gradient(135deg, #21a1f1, #61dafb);
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #388e3c, #4caf50);
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 /* Volume and progress bars */
@@ -63,35 +60,35 @@ button:hover {
 
 input[type='range'] {
     -webkit-appearance: none;
-    height: 8px;
-    background: #444;
+    height: 10px;
+    background: #555;
     border-radius: 5px;
     outline: none;
 }
 
 input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #61dafb;
+    width: 24px;
+    height: 24px;
+    background: #4caf50;
     border-radius: 50%;
     cursor: pointer;
     transition: background 0.3s;
 }
 
 input[type='range']::-webkit-slider-thumb:hover {
-    background: #21a1f1;
+    background: #388e3c;
 }
 
 /* Time display */
 .time-display {
     margin-bottom: 20px;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
 }
 
 /* Playlist styles */
-.playlist {
+.playlist-container {
     margin-bottom: 20px;
 }
 
@@ -110,33 +107,39 @@ input[type='range']::-webkit-slider-thumb:hover {
 
 #playlist li:hover,
 #playlist li.playing {
-    background: #61dafb;
+    background: #4caf50;
     color: #000;
 }
 
 /* Add song button */
 #add-song {
-    background: linear-gradient(135deg, #61dafb, #21a1f1);
+    background: linear-gradient(135deg, #ff5722, #e64a19);
     border: none;
-    padding: 12px;
+    padding: 14px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 10px;
     color: #fff;
     transition: background 0.3s, transform 0.2s;
 }
 
 #add-song:hover {
-    background: linear-gradient(135deg, #21a1f1, #61dafb);
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #e64a19, #ff5722);
+    transform: scale(1.1);
 }
 
 /* Visualization */
-.visualization {
+.visualization-container {
+    position: relative;
     width: 100%;
-    height: 150px;
-    background: #000;
-    border-radius: 10px;
+    height: 200px;
     margin-bottom: 20px;
+}
+
+#visualizer {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
 }
 
 /* Extra controls */
@@ -146,50 +149,81 @@ input[type='range']::-webkit-slider-thumb:hover {
 
 button#shuffle.active,
 button#repeat.active {
-    background: #f54242;
+    background: #f44336;
 }
 
 /* Settings panel */
-#settings-panel {
+.settings-panel {
     margin-top: 20px;
     background: #333;
     border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    display: none;
 }
 
-#settings-panel label {
+.settings-panel label {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
 }
 
-#settings-panel select,
-#settings-panel input {
+.settings-panel select,
+.settings-panel input {
     margin-bottom: 10px;
     background: #444;
     border: 1px solid #555;
     color: #f1f1f1;
     border-radius: 5px;
-    padding: 8px;
+    padding: 10px;
+}
+
+/* Lyrics display */
+.lyrics-display {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    background: #222;
+}
+
+.lyrics-display h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Track info */
+.track-info {
+    margin-top: 20px;
+}
+
+.track-info h3 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.track-info p {
+    font-size: 18px;
+    color: #aaa;
 }
 
 /* Responsive styles */
 @media (min-width: 600px) {
     .player {
-        width: 60%;
+        width: 70%;
     }
 }
 
 @media (min-width: 1000px) {
     .player {
-        width: 50%;
+        width: 60%;
     }
 }
 
 /* Light theme */
 body.light {
-    background-color: #f4f4f4;
+    background: radial-gradient(circle, #f4f4f4, #e0e0e0);
     color: #333;
 }
 
@@ -198,10 +232,12 @@ body.light .player {
     color: #333;
 }
 
-body.light .controls button {
-    background: linear-gradient(135deg, #007bff, #0056b3);
+body.light button {
+    background: linear-gradient(135deg, #3f51b5, #303f9f);
 }
 
-body.light .controls button:hover {
-    background: linear-gradient(135deg, #0056b3, #007bff);
+body.light #playlist li:hover,
+body.light #playlist li.playing {
+    background: #3f51b5;
+    color: #fff;
 }
