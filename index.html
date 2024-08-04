@@ -3,86 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Player</title>
+    <title>Spotify-inspired Music Player</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="player">
-        <div class="visualization-container">
-            <canvas id="visualizer"></canvas>
-        </div>
-        <div class="album-art">
-            <img id="album-art" src="default-art.jpg" alt="Album Art">
-        </div>
-        <div class="controls">
-            <button id="prev" class="control-button">Prev</button>
-            <button id="play-pause" class="control-button">Play</button>
-            <button id="stop" class="control-button">Stop</button>
-            <button id="next" class="control-button">Next</button>
-            <button id="mute" class="control-button">Mute</button>
-            <button id="shuffle" class="control-button">Shuffle</button>
-            <button id="repeat" class="control-button">Repeat</button>
-        </div>
-        <div class="time-display">
-            <span id="current-time">0:00</span> / <span id="total-time">0:00</span>
-        </div>
-        <input id="volume" type="range" min="0" max="1" step="0.01" value="1" class="volume-control">
-        <input id="progress" type="range" min="0" max="100" step="1" value="0" class="progress-bar">
-        <input id="audio-balance" type="range" min="-1" max="1" step="0.1" value="0" class="audio-balance-control">
-        <div class="playlist-container">
-            <ul id="playlist" class="playlist"></ul>
-            <button id="add-song" class="playlist-button">Add Song</button>
-            <button id="clear-playlist" class="playlist-button">Clear Playlist</button>
-        </div>
-        <div id="settings-panel" class="settings-panel">
-            <label for="theme">Theme:</label>
-            <select id="theme" class="settings-select">
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-            </select>
-            <label for="speed">Playback Speed:</label>
-            <input id="speed" type="range" min="0.5" max="2" step="0.1" value="1" class="settings-range">
-            <label for="audio-balance">Audio Balance:</label>
-            <input id="audio-balance" type="range" min="-1" max="1" step="0.1" value="0" class="settings-range">
-            <label for="volume">Volume:</label>
-            <input id="volume" type="range" min="0" max="1" step="0.01" value="1" class="settings-range">
-            <label for="progress">Progress:</label>
-            <input id="progress" type="range" min="0" max="100" step="1" value="0" class="settings-range">
-        </div>
-        <button id="settings" class="settings-btn">Settings</button>
-        <input type="file" id="file-input" style="display: none;">
-        <!-- New elements -->
-        <div class="lyrics-display">
-            <h2>Lyrics</h2>
-            <p id="lyrics">No lyrics available</p>
-        </div>
-        <div class="track-info">
-            <h3 id="track-title">Track Title</h3>
-            <p id="artist">Artist Name</p>
-            <p id="album">Album Name</p>
-            <p id="release-date">Release Date</p>
-        </div>
-        <div class="playlist-controls">
-            <button id="sort-playlist" class="playlist-control-button">Sort Playlist</button>
-            <button id="remove-selected" class="playlist-control-button">Remove Selected</button>
-        </div>
-        <div class="now-playing">
-            <p id="now-playing">Currently playing: <span id="now-playing-track">None</span></p>
-        </div>
-        <div class="volume-control">
-            <h3>Volume Control</h3>
-            <input id="volume-control" type="range" min="0" max="1" step="0.01" value="1" class="volume-control-range">
-        </div>
-        <!-- Mini Player -->
-        <div class="mini-player">
-            <img id="mini-album-art" src="default-art.jpg" alt="Mini Album Art">
-            <div class="mini-controls">
-                <button id="mini-play-pause" class="mini-control-button">Play</button>
-                <button id="mini-next" class="mini-control-button">Next</button>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="Logo">
             </div>
-            <p id="mini-track-title">Track Title</p>
-        </div>
+            <ul class="nav-links">
+                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#"><i class="fas fa-search"></i> Search</a></li>
+                <li><a href="#"><i class="fas fa-book"></i> Your Library</a></li>
+            </ul>
+            <div class="playlist-section">
+                <h2>Playlists</h2>
+                <ul id="playlist" class="playlist"></ul>
+                <button id="add-song" class="playlist-button"><i class="fas fa-plus"></i> Create Playlist</button>
+            </div>
+        </nav>
+        <main class="main-content">
+            <header>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for Artists, Songs, or Podcasts">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="user-menu">
+                    <img src="user-avatar.jpg" alt="User Avatar">
+                    <span>Username</span>
+                    <i class="fas fa-caret-down"></i>
+                </div>
+            </header>
+            <div class="now-playing-view">
+                <div class="album-art">
+                    <img id="album-art" src="default-art.jpg" alt="Album Art">
+                </div>
+                <div class="track-info">
+                    <h1 id="track-title">Track Title</h1>
+                    <h2 id="artist">Artist Name</h2>
+                    <p id="album">Album Name</p>
+                    <p id="release-date">Release Date</p>
+                </div>
+                <div class="lyrics-display">
+                    <h3>Lyrics</h3>
+                    <p id="lyrics">No lyrics available</p>
+                </div>
+            </div>
+        </main>
     </div>
+    <footer class="player-bar">
+        <div class="now-playing-info">
+            <img id="mini-album-art" src="default-art.jpg" alt="Mini Album Art">
+            <div class="track-details">
+                <span id="mini-track-title">Track Title</span>
+                <span id="mini-artist">Artist Name</span>
+            </div>
+            <button class="like-button"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="player-controls">
+            <div class="main-controls">
+                <button id="shuffle" class="control-button"><i class="fas fa-random"></i></button>
+                <button id="prev" class="control-button"><i class="fas fa-step-backward"></i></button>
+                <button id="play-pause" class="control-button play-pause"><i class="fas fa-play"></i></button>
+                <button id="next" class="control-button"><i class="fas fa-step-forward"></i></button>
+                <button id="repeat" class="control-button"><i class="fas fa-redo"></i></button>
+            </div>
+            <div class="progress-container">
+                <span id="current-time">0:00</span>
+                <div class="progress-bar">
+                    <input id="progress" type="range" min="0" max="100" step="1" value="0">
+                </div>
+                <span id="total-time">0:00</span>
+            </div>
+        </div>
+        <div class="additional-controls">
+            <button id="queue-button"><i class="fas fa-list"></i></button>
+            <button id="devices-button"><i class="fas fa-desktop"></i></button>
+            <div class="volume-control">
+                <i class="fas fa-volume-up"></i>
+                <input id="volume" type="range" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
+    </footer>
     <script src="scripts.js"></script>
 </body>
 </html>
