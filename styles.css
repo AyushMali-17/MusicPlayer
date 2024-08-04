@@ -1,4 +1,4 @@
-/* Enhanced CSS for Version 8 */
+/* Enhanced CSS for Version 9 */
 
 /* Body and player container styles */
 body {
@@ -33,6 +33,24 @@ body.light button {
     background: linear-gradient(135deg, #3f51b5, #303f9f);
 }
 
+/* Album art */
+.album-art {
+    margin-bottom: 20px;
+}
+
+#album-art {
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s;
+}
+
+#album-art:hover {
+    transform: scale(1.05);
+}
+
 /* Control buttons */
 button {
     background: linear-gradient(135deg, #4caf50, #388e3c);
@@ -59,21 +77,12 @@ button:hover {
     margin-bottom: 20px;
 }
 
-#volume,
-#audio-balance,
-#progress {
-    width: 100%;
-    background: #333;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
 input[type='range'] {
-    -webkit-appearance: none;
-    height: 10px;
+    width: 100%;
     background: #555;
     border-radius: 5px;
-    outline: none;
+    overflow: hidden;
+    margin: 10px 0;
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -164,50 +173,36 @@ input[type='range']::-webkit-slider-thumb:hover {
     font-weight: bold;
 }
 
-/* Track info */
-.track-info {
-    margin-top: 20px;
-}
-
-.track-info h3 {
-    font-size: 24px;
-    margin: 0;
-}
-
-.track-info p {
-    font-size: 18px;
-    color: #aaa;
-}
-
 /* Settings panel */
 .settings-panel {
-    margin-top: 20px;
-    background: #333;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
     display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 10;
 }
 
-.settings-panel label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
+/* Dark mode toggle */
+body.dark-mode {
+    background: #121212;
 }
 
-.settings-panel select,
-.settings-panel input {
-    margin-bottom: 10px;
-    background: #444;
-    border: 1px solid #555;
-    color: #f1f1f1;
-    border-radius: 5px;
-    padding: 10px;
+body.dark-mode .player {
+    background: #1e1e1e;
 }
 
-/* Responsive styles */
-@media (min-width: 600px) {
+/* Responsive design */
+@media (max-width: 768px) {
     .player {
-        width: 80%;
+        width: 95%;
+    }
+
+    #album-art {
+        width: 200px;
+        height: 200px;
     }
 }

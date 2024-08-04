@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nowPlayingTrack = document.getElementById('now-playing-track');
     const sortPlaylistBtn = document.getElementById('sort-playlist');
     const removeSelectedBtn = document.getElementById('remove-selected');
+    const albumArt = document.getElementById('album-art');
     const ctx = visualizerCanvas.getContext('2d');
 
     let audio = new Audio();
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             artist.textContent = 'Artist Name'; // Placeholder
             lyricsDisplay.textContent = 'No lyrics available'; // Placeholder
             nowPlayingTrack.textContent = song.textContent;
+            albumArt.src = 'default-art.jpg'; // Placeholder; you might update this dynamically
             audio.load();
             updateUI();
         }
@@ -175,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const changeTheme = (theme) => {
         document.body.classList.toggle('light', theme === 'light');
+        document.body.classList.toggle('dark-mode', theme === 'dark');
     };
 
     const changeSpeed = (speed) => {
@@ -212,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
             artist.textContent = 'Artist Name';
             lyricsDisplay.textContent = 'No lyrics available';
             nowPlayingTrack.textContent = 'None';
+            albumArt.src = 'default-art.jpg'; // Placeholder
         }
     };
 
@@ -227,23 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    stopBtn.addEventListener('click', stopSong);
     nextBtn.addEventListener('click', nextSong);
     prevBtn.addEventListener('click', prevSong);
-    stopBtn.addEventListener('click', stopSong);
     muteBtn.addEventListener('click', muteSong);
     shuffleBtn.addEventListener('click', toggleShuffle);
     repeatBtn.addEventListener('click', toggleRepeat);
-    addSongBtn.addEventListener('click', () => fileInput.click());
-    clearPlaylistBtn.addEventListener('click', () => playlist.innerHTML = '');
-    sortPlaylistBtn.addEventListener('click', sortPlaylist);
-    removeSelectedBtn.addEventListener('click', removeSelected);
-    settingsBtn.addEventListener('click', () => {
-        settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
-    });
-    themeSelect.addEventListener('change', (e) => changeTheme(e.target.value));
-    speedInput.addEventListener('input', (e) => changeSpeed(e.target.value));
+    volumeControl.addEventListener('input', (e) => audio.volume = e.target.value);
+    progressBar.addEventListener('input', (e) => audio.currentTime = (e.target.value / 100) * audio.duration);
     balanceControl.addEventListener('input', (e) => changeBalance(e.target.value));
     fileInput.addEventListener('change', handleFileSelect);
+    settingsBtn.addEventListener('click', () => settingsPanel.classList.toggle('visible'));
+    themeSelect.addEventListener('change', (e) => changeTheme(e.target.value));
+    speedInput.addEventListener('input', (e) => changeSpeed(e.target.value));
+    sortPlaylistBtn.addEventListener('click', sortPlaylist);
+    removeSelectedBtn.addEventListener('click', removeSelected);
+    document.querySelector('#dark-mode-toggle').addEventListener('click', toggleDarkMode);
 
     // Initialize UI
     changeTheme(themeSelect.value);
