@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const playPauseBtn = document.getElementById('play-pause');
     const prevBtn = document.getElementById('prev');
     const nextBtn = document.getElementById('next');
+    const volumeControl = document.getElementById('volume');
+    const progressBar = document.getElementById('progress');
+    const currentTimeDisplay = document.getElementById('current-time');
+    const totalTimeDisplay = document.getElementById('total-time');
     const playlistItems = document.querySelectorAll('#playlist li');
     const visualizerCanvas = document.getElementById('visualizer');
     const ctx = visualizerCanvas.getContext('2d');
@@ -46,6 +50,17 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistItems.forEach((item, idx) => {
             item.classList.toggle('playing', idx === index);
         });
+    };
+
+    const updateTimeDisplay = () => {
+        currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        totalTimeDisplay.textContent = formatTime(audio.duration);
+    };
+
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
     const startVisualization = () => {
@@ -95,6 +110,21 @@ document.addEventListener('DOMContentLoaded', () => {
     nextBtn.addEventListener('click', nextSong);
     prevBtn.addEventListener('click', prevSong);
 
+    volumeControl.addEventListener('input', (e) => {
+        audio.volume = e.target.value;
+    });
+
+    progressBar.addEventListener('input', (e) => {
+        const seekTime = (e.target.value / 100) * audio.duration;
+        audio.currentTime = seekTime;
+    });
+
+    audio.addEventListener('timeupdate', () => {
+        const progress = (audio.currentTime / audio.duration) * 100;
+        progressBar.value = progress;
+        updateTimeDisplay();
+    });
+
     playlistItems.forEach((item, index) => {
         item.addEventListener('click', () => {
             currentIndex = index;
@@ -105,4 +135,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial load
     loadSong(currentIndex);
+    updateTimeDisplay();
 });

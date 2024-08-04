@@ -13,6 +13,10 @@ body {
     width: 90%;
     max-width: 400px;
     text-align: center;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: #333;
 }
 
 .controls {
@@ -26,10 +30,31 @@ button {
     margin: 5px;
     cursor: pointer;
     font-size: 16px;
+    border-radius: 5px;
 }
 
 button:hover {
     background-color: #21a1f1;
+}
+
+.volume-control {
+    margin-bottom: 20px;
+}
+
+#volume {
+    width: 100%;
+}
+
+.progress-bar {
+    margin-bottom: 20px;
+}
+
+#progress {
+    width: 100%;
+}
+
+.time-display {
+    margin-bottom: 20px;
 }
 
 .playlist {
@@ -45,6 +70,7 @@ button:hover {
 #playlist li {
     padding: 10px;
     cursor: pointer;
+    border-bottom: 1px solid #444;
 }
 
 #playlist li:hover, #playlist li.playing {
