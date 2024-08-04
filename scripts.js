@@ -2,13 +2,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const playPauseBtn = document.getElementById('play-pause');
     const prevBtn = document.getElementById('prev');
     const nextBtn = document.getElementById('next');
+    const stopBtn = document.getElementById('stop');
+    const muteBtn = document.getElementById('mute');
     const shuffleBtn = document.getElementById('shuffle');
     const repeatBtn = document.getElementById('repeat');
     const volumeControl = document.getElementById('volume');
     const progressBar = document.getElementById('progress');
     const currentTimeDisplay = document.getElementById('current-time');
     const totalTimeDisplay = document.getElementById('total-time');
-    const playlistItems = document.querySelectorAll('#playlist li');
+    const playlist = document.getElementById('playlist');
     const visualizerCanvas = document.getElementById('visualizer');
     const ctx = visualizerCanvas.getContext('2d');
     const addSongBtn = document.getElementById('add-song');
@@ -17,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsPanel = document.getElementById('settings-panel');
     const themeSelect = document.getElementById('theme');
     const speedInput = document.getElementById('speed');
+    const balanceControl = document.getElementById('audio-balance');
 
     let audio = new Audio();
     let currentIndex = 0;
@@ -26,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioContext, analyser, source, bufferLength, dataArray;
 
     const loadSong = (index) => {
-        audio.src = playlistItems[index].getAttribute('data-src');
+        audio.src = playlist.children[index].getAttribute('data-src');
         audio.load();
         updatePlaylistUI(index);
     };
@@ -45,18 +48,31 @@ document.addEventListener('DOMContentLoaded', () => {
         stopVisualization();
     };
 
+    const stopSong = () => {
+        audio.pause();
+        audio.currentTime = 0;
+        isPlaying = false;
+        playPauseBtn.textContent = 'Play';
+        stopVisualization();
+    };
+
+    const muteSong = () => {
+        audio.muted = !audio.muted;
+        muteBtn.textContent = audio.muted ? 'Unmute' : 'Mute';
+    };
+
     const nextSong = () => {
         if (isShuffling) {
-            currentIndex = Math.floor(Math.random() * playlistItems.length);
+            currentIndex = Math.floor(Math.random() * playlist.children.length);
         } else {
-            currentIndex = (currentIndex + 1) % playlistItems.length;
+            currentIndex = (currentIndex + 1) % playlist.children.length;
         }
         loadSong(currentIndex);
         if (isPlaying) playSong();
     };
 
     const prevSong = () => {
-        currentIndex = (currentIndex - 1 + playlistItems.length) % playlistItems.length;
+        currentIndex = (currentIndex - 1 + playlist.children.length) % playlist.children.length;
         loadSong(currentIndex);
         if (isPlaying) playSong();
     };
@@ -72,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updatePlaylistUI = (index) => {
-        playlistItems.forEach((item, idx) => {
+        Array.from(playlist.children).forEach((item, idx) => {
             item.classList.toggle('playing', idx === index);
         });
     };
@@ -132,11 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
             newSong.textContent = file.name;
             newSong.setAttribute('data-src', url);
             newSong.addEventListener('click', () => {
-                currentIndex = Array.from(playlistItems).indexOf(newSong);
+                currentIndex = Array.from(playlist.children).indexOf(newSong);
                 loadSong(currentIndex);
                 playSong();
             });
-            document.getElementById('playlist').appendChild(newSong);
+            playlist.appendChild(newSong);
             fileInput.value = ''; // Clear the file input
         }
     };
@@ -153,6 +169,20 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.playbackRate = speed;
     };
 
+    const changeBalance = (balance) => {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+        }
+        const panNode = audioContext.createStereoPanner();
+        source.connect(panNode);
+        panNode.connect(audioContext.destination);
+        panNode.pan.value = balance;
+    };
+
     playPauseBtn.addEventListener('click', () => {
         if (isPlaying) {
             pauseSong();
@@ -163,6 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextBtn.addEventListener('click', nextSong);
     prevBtn.addEventListener('click', prevSong);
+    stopBtn.addEventListener('click', stopSong);
+    muteBtn.addEventListener('click', muteSong);
     shuffleBtn.addEventListener('click', toggleShuffle);
     repeatBtn.addEventListener('click', toggleRepeat);
     addSongBtn.addEventListener('click', () => fileInput.click());
@@ -172,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     themeSelect.addEventListener('change', (e) => changeTheme(e.target.value));
     speedInput.addEventListener('input', (e) => changeSpeed(e.target.value));
+    balanceControl.addEventListener('input', (e) => changeBalance(e.target.value));
 
     volumeControl.addEventListener('input', (e) => {
         audio.volume = e.target.value;
@@ -196,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    playlistItems.forEach((item, index) => {
+    playlist.children.forEach((item, index) => {
         item.addEventListener('click', () => {
             currentIndex = index;
             loadSong(currentIndex);
