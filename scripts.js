@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const playPauseBtn = document.getElementById('play-pause');
     const prevBtn = document.getElementById('prev');
     const nextBtn = document.getElementById('next');
+    const shuffleBtn = document.getElementById('shuffle');
+    const repeatBtn = document.getElementById('repeat');
     const volumeControl = document.getElementById('volume');
     const progressBar = document.getElementById('progress');
     const currentTimeDisplay = document.getElementById('current-time');
@@ -9,9 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const playlistItems = document.querySelectorAll('#playlist li');
     const visualizerCanvas = document.getElementById('visualizer');
     const ctx = visualizerCanvas.getContext('2d');
+    const addSongBtn = document.getElementById('add-song');
+    const fileInput = document.getElementById('file-input');
+    const settingsBtn = document.getElementById('settings');
+    const settingsPanel = document.getElementById('settings-panel');
+    const themeSelect = document.getElementById('theme');
+    const speedInput = document.getElementById('speed');
+
     let audio = new Audio();
     let currentIndex = 0;
     let isPlaying = false;
+    let isShuffling = false;
+    let isRepeating = false;
     let audioContext, analyser, source, bufferLength, dataArray;
 
     const loadSong = (index) => {
@@ -35,7 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const nextSong = () => {
-        currentIndex = (currentIndex + 1) % playlistItems.length;
+        if (isShuffling) {
+            currentIndex = Math.floor(Math.random() * playlistItems.length);
+        } else {
+            currentIndex = (currentIndex + 1) % playlistItems.length;
+        }
         loadSong(currentIndex);
         if (isPlaying) playSong();
     };
@@ -44,6 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
         currentIndex = (currentIndex - 1 + playlistItems.length) % playlistItems.length;
         loadSong(currentIndex);
         if (isPlaying) playSong();
+    };
+
+    const toggleShuffle = () => {
+        isShuffling = !isShuffling;
+        shuffleBtn.classList.toggle('active', isShuffling);
+    };
+
+    const toggleRepeat = () => {
+        isRepeating = !isRepeating;
+        repeatBtn.classList.toggle('active', isRepeating);
     };
 
     const updatePlaylistUI = (index) => {
@@ -99,6 +124,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const handleFileSelect = () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            const newSong = document.createElement('li');
+            newSong.textContent = file.name;
+            newSong.setAttribute('data-src', url);
+            newSong.addEventListener('click', () => {
+                currentIndex = Array.from(playlistItems).indexOf(newSong);
+                loadSong(currentIndex);
+                playSong();
+            });
+            document.getElementById('playlist').appendChild(newSong);
+            fileInput.value = ''; // Clear the file input
+        }
+    };
+
+    const changeTheme = (theme) => {
+        if (theme === 'light') {
+            document.body.classList.add('light');
+        } else {
+            document.body.classList.remove('light');
+        }
+    };
+
+    const changeSpeed = (speed) => {
+        audio.playbackRate = speed;
+    };
+
     playPauseBtn.addEventListener('click', () => {
         if (isPlaying) {
             pauseSong();
@@ -109,6 +163,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextBtn.addEventListener('click', nextSong);
     prevBtn.addEventListener('click', prevSong);
+    shuffleBtn.addEventListener('click', toggleShuffle);
+    repeatBtn.addEventListener('click', toggleRepeat);
+    addSongBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', handleFileSelect);
+    settingsBtn.addEventListener('click', () => {
+        settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
+    });
+    themeSelect.addEventListener('change', (e) => changeTheme(e.target.value));
+    speedInput.addEventListener('input', (e) => changeSpeed(e.target.value));
 
     volumeControl.addEventListener('input', (e) => {
         audio.volume = e.target.value;
@@ -123,6 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const progress = (audio.currentTime / audio.duration) * 100;
         progressBar.value = progress;
         updateTimeDisplay();
+    });
+
+    audio.addEventListener('ended', () => {
+        if (isRepeating) {
+            playSong();
+        } else {
+            nextSong();
+        }
     });
 
     playlistItems.forEach((item, index) => {
