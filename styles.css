@@ -10,7 +10,8 @@ body {
 }
 
 .player {
-    width: 300px;
+    width: 90%;
+    max-width: 400px;
     text-align: center;
 }
 
@@ -38,6 +39,7 @@ button:hover {
 #playlist {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 #playlist li {
@@ -45,7 +47,7 @@ button:hover {
     cursor: pointer;
 }
 
-#playlist li:hover {
+#playlist li:hover, #playlist li.playing {
     background-color: #61dafb;
 }
 
@@ -53,4 +55,10 @@ button:hover {
     width: 100%;
     height: 100px;
     background-color: #000;
+}
+
+@media (min-width: 600px) {
+    .player {
+        width: 50%;
+    }
 }
