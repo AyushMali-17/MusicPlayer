@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Existing element selections
     const playPauseBtn = document.getElementById('play-pause');
     const stopBtn = document.getElementById('stop');
     const nextBtn = document.getElementById('next');
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('file-input');
     const playlist = document.getElementById('playlist');
     const addSongBtn = document.getElementById('add-song');
+    const clearPlaylistBtn = document.getElementById('clear-playlist');
     const settingsPanel = document.getElementById('settings-panel');
     const settingsBtn = document.getElementById('settings');
     const themeSelect = document.getElementById('theme');
@@ -22,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const lyricsDisplay = document.getElementById('lyrics');
     const trackTitle = document.getElementById('track-title');
     const artist = document.getElementById('artist');
+    const nowPlayingTrack = document.getElementById('now-playing-track');
+    const sortPlaylistBtn = document.getElementById('sort-playlist');
+    const removeSelectedBtn = document.getElementById('remove-selected');
     const ctx = visualizerCanvas.getContext('2d');
 
     let audio = new Audio();
@@ -42,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             trackTitle.textContent = song.textContent;
             artist.textContent = 'Artist Name'; // Placeholder
             lyricsDisplay.textContent = 'No lyrics available'; // Placeholder
+            nowPlayingTrack.textContent = song.textContent;
             audio.load();
             updateUI();
         }
@@ -168,11 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const changeTheme = (theme) => {
-        if (theme === 'light') {
-            document.body.classList.add('light');
-        } else {
-            document.body.classList.remove('light');
-        }
+        document.body.classList.toggle('light', theme === 'light');
     };
 
     const changeSpeed = (speed) => {
@@ -193,6 +195,30 @@ document.addEventListener('DOMContentLoaded', () => {
         panNode.pan.value = balance;
     };
 
+    const sortPlaylist = () => {
+        const songs = Array.from(playlist.children);
+        songs.sort((a, b) => a.textContent.localeCompare(b.textContent));
+        playlist.innerHTML = '';
+        songs.forEach(song => playlist.appendChild(song));
+    };
+
+    const removeSelected = () => {
+        const selected = Array.from(playlist.querySelectorAll('li.selected'));
+        selected.forEach(song => playlist.removeChild(song));
+        if (playlist.children.length > 0) {
+            loadSong(currentIndex);
+        } else {
+            trackTitle.textContent = 'Track Title';
+            artist.textContent = 'Artist Name';
+            lyricsDisplay.textContent = 'No lyrics available';
+            nowPlayingTrack.textContent = 'None';
+        }
+    };
+
+    const toggleDarkMode = () => {
+        document.body.classList.toggle('dark-mode');
+    };
+
     playPauseBtn.addEventListener('click', () => {
         if (isPlaying) {
             pauseSong();
@@ -208,66 +234,19 @@ document.addEventListener('DOMContentLoaded', () => {
     shuffleBtn.addEventListener('click', toggleShuffle);
     repeatBtn.addEventListener('click', toggleRepeat);
     addSongBtn.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', handleFileSelect);
+    clearPlaylistBtn.addEventListener('click', () => playlist.innerHTML = '');
+    sortPlaylistBtn.addEventListener('click', sortPlaylist);
+    removeSelectedBtn.addEventListener('click', removeSelected);
     settingsBtn.addEventListener('click', () => {
         settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
     });
     themeSelect.addEventListener('change', (e) => changeTheme(e.target.value));
     speedInput.addEventListener('input', (e) => changeSpeed(e.target.value));
     balanceControl.addEventListener('input', (e) => changeBalance(e.target.value));
+    fileInput.addEventListener('change', handleFileSelect);
 
-    volumeControl.addEventListener('input', (e) => {
-        audio.volume = e.target.value;
-    });
-
-    progressBar.addEventListener('input', (e) => {
-        const seekTime = (e.target.value / 100) * audio.duration;
-        audio.currentTime = seekTime;
-    });
-
-    audio.addEventListener('timeupdate', () => {
-        const progress = (audio.currentTime / audio.duration) * 100;
-        progressBar.value = progress;
-        updateTimeDisplay();
-    });
-
-    audio.addEventListener('ended', () => {
-        if (isRepeating) {
-            playSong();
-        } else {
-            nextSong();
-        }
-    });
-
-    playlist.children.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            currentIndex = index;
-            loadSong(currentIndex);
-            playSong();
-        });
-    });
-
-    // Initial load
-    loadSong(currentIndex);
-    updateTimeDisplay();
-
-    // Advanced animations and visual effects
-    document.querySelectorAll('button').forEach(button => {
-        button.addEventListener('mouseover', () => {
-            button.style.transform = 'scale(1.1)';
-        });
-        button.addEventListener('mouseout', () => {
-            button.style.transform = 'scale(1)';
-        });
-    });
-
-    // Highlighting active controls
-    [playPauseBtn, stopBtn, nextBtn, prevBtn].forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.controls button').forEach(button => {
-                button.classList.remove('active');
-            });
-            btn.classList.add('active');
-        });
-    });
+    // Initialize UI
+    changeTheme(themeSelect.value);
+    changeSpeed(speedInput.value);
+    changeBalance(balanceControl.value);
 });
