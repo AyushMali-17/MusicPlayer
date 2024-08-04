@@ -1,48 +1,51 @@
-/* Updated CSS to incorporate new styles and changes */
+/* Enhanced CSS for advanced visuals */
 
-/* Basic body styles */
+/* Body and player container styles */
+
+
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #282c34;
-    color: white;
+    background-color: #1c1c1c;
+    color: #f1f1f1;
 }
 
-/* Player container styling */
 .player {
     width: 90%;
-    max-width: 600px;
+    max-width: 700px;
     text-align: center;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    background-color: #333;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    background: linear-gradient(135deg, #3a3a3a, #1c1c1c);
+    border: 1px solid #444;
+    position: relative;
 }
 
-/* Control button styling */
-.controls {
-    margin-bottom: 20px;
-}
-
+/* Control buttons */
 button {
-    background-color: #61dafb;
+    background: linear-gradient(135deg, #61dafb, #21a1f1);
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     margin: 5px;
     cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
+    font-size: 18px;
+    border-radius: 8px;
+    color: #fff;
+    transition: background 0.3s, transform 0.2s;
 }
 
 button:hover {
-    background-color: #21a1f1;
+    background: linear-gradient(135deg, #21a1f1, #61dafb);
+    transform: scale(1.05);
 }
 
-/* Volume and progress bar styling */
+/* Volume and progress bars */
 .volume-control,
 .progress-bar,
 .audio-balance-control {
@@ -53,14 +56,41 @@ button:hover {
 #audio-balance,
 #progress {
     width: 100%;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-/* Time display styling */
+input[type='range'] {
+    -webkit-appearance: none;
+    height: 8px;
+    background: #444;
+    border-radius: 5px;
+    outline: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #61dafb;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+    background: #21a1f1;
+}
+
+/* Time display */
 .time-display {
     margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
-/* Playlist styling */
+/* Playlist styles */
 .playlist {
     margin-bottom: 20px;
 }
@@ -72,80 +102,106 @@ button:hover {
 }
 
 #playlist li {
-    padding: 10px;
+    padding: 15px;
     cursor: pointer;
     border-bottom: 1px solid #444;
+    transition: background 0.3s, color 0.3s;
 }
 
-#playlist li:hover, #playlist li.playing {
-    background-color: #61dafb;
+#playlist li:hover,
+#playlist li.playing {
+    background: #61dafb;
+    color: #000;
 }
 
-/* Add song button styling */
+/* Add song button */
 #add-song {
-    background-color: #61dafb;
+    background: linear-gradient(135deg, #61dafb, #21a1f1);
     border: none;
-    padding: 10px;
+    padding: 12px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
+    color: #fff;
+    transition: background 0.3s, transform 0.2s;
 }
 
 #add-song:hover {
-    background-color: #21a1f1;
+    background: linear-gradient(135deg, #21a1f1, #61dafb);
+    transform: scale(1.05);
 }
 
-/* Visualization styling */
+/* Visualization */
 .visualization {
     width: 100%;
-    height: 100px;
-    background-color: #000;
+    height: 150px;
+    background: #000;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
-/* Extra controls styling */
+/* Extra controls */
 .extra-controls {
     margin-top: 20px;
 }
 
-button#shuffle.active, button#repeat.active {
-    background-color: #f54242;
+button#shuffle.active,
+button#repeat.active {
+    background: #f54242;
 }
 
-/* Settings panel styling */
+/* Settings panel */
 #settings-panel {
     margin-top: 20px;
+    background: #333;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 #settings-panel label {
     display: block;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
-#settings-panel select, #settings-panel input {
+#settings-panel select,
+#settings-panel input {
     margin-bottom: 10px;
+    background: #444;
+    border: 1px solid #555;
+    color: #f1f1f1;
+    border-radius: 5px;
+    padding: 8px;
 }
 
-/* Responsive styling */
+/* Responsive styles */
 @media (min-width: 600px) {
+    .player {
+        width: 60%;
+    }
+}
+
+@media (min-width: 1000px) {
     .player {
         width: 50%;
     }
 }
 
-/* Light theme styles */
+/* Light theme */
 body.light {
     background-color: #f4f4f4;
     color: #333;
 }
 
 body.light .player {
-    background-color: #fff;
+    background: linear-gradient(135deg, #ffffff, #e0e0e0);
     color: #333;
 }
 
 body.light .controls button {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #007bff, #0056b3);
 }
 
 body.light .controls button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #0056b3, #007bff);
 }

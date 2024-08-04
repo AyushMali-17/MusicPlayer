@@ -80,11 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleShuffle = () => {
         isShuffling = !isShuffling;
         shuffleBtn.classList.toggle('active', isShuffling);
+        shuffleBtn.classList.add('pulse');
     };
 
     const toggleRepeat = () => {
         isRepeating = !isRepeating;
         repeatBtn.classList.toggle('active', isRepeating);
+        repeatBtn.classList.add('pulse');
     };
 
     const updatePlaylistUI = (index) => {
@@ -134,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < bufferLength; i++) {
             barHeight = dataArray[i] / 2;
-            ctx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+            ctx.fillStyle = `rgb(${barHeight + 100},50,50)`;
             ctx.fillRect(x, visualizerCanvas.height - barHeight / 2, barWidth, barHeight);
             x += barWidth + 1;
         }
@@ -240,4 +242,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial load
     loadSong(currentIndex);
     updateTimeDisplay();
+
+    // Add some animations for UI elements
+    document.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('transitionend', () => {
+            btn.classList.remove('pulse');
+        });
+    });
 });
