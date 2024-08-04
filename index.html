@@ -15,13 +15,13 @@
             <img id="album-art" src="default-art.jpg" alt="Album Art">
         </div>
         <div class="controls">
-            <button id="prev">Prev</button>
-            <button id="play-pause">Play</button>
-            <button id="stop">Stop</button>
-            <button id="next">Next</button>
-            <button id="mute">Mute</button>
-            <button id="shuffle">Shuffle</button>
-            <button id="repeat">Repeat</button>
+            <button id="prev" class="control-button">Prev</button>
+            <button id="play-pause" class="control-button">Play</button>
+            <button id="stop" class="control-button">Stop</button>
+            <button id="next" class="control-button">Next</button>
+            <button id="mute" class="control-button">Mute</button>
+            <button id="shuffle" class="control-button">Shuffle</button>
+            <button id="repeat" class="control-button">Repeat</button>
         </div>
         <div class="time-display">
             <span id="current-time">0:00</span> / <span id="total-time">0:00</span>
@@ -31,23 +31,23 @@
         <input id="audio-balance" type="range" min="-1" max="1" step="0.1" value="0" class="audio-balance-control">
         <div class="playlist-container">
             <ul id="playlist" class="playlist"></ul>
-            <button id="add-song">Add Song</button>
-            <button id="clear-playlist">Clear Playlist</button>
+            <button id="add-song" class="playlist-button">Add Song</button>
+            <button id="clear-playlist" class="playlist-button">Clear Playlist</button>
         </div>
         <div id="settings-panel" class="settings-panel">
             <label for="theme">Theme:</label>
-            <select id="theme">
+            <select id="theme" class="settings-select">
                 <option value="dark">Dark</option>
                 <option value="light">Light</option>
             </select>
             <label for="speed">Playback Speed:</label>
-            <input id="speed" type="range" min="0.5" max="2" step="0.1" value="1">
+            <input id="speed" type="range" min="0.5" max="2" step="0.1" value="1" class="settings-range">
             <label for="audio-balance">Audio Balance:</label>
-            <input id="audio-balance" type="range" min="-1" max="1" step="0.1" value="0">
+            <input id="audio-balance" type="range" min="-1" max="1" step="0.1" value="0" class="settings-range">
             <label for="volume">Volume:</label>
-            <input id="volume" type="range" min="0" max="1" step="0.01" value="1">
+            <input id="volume" type="range" min="0" max="1" step="0.01" value="1" class="settings-range">
             <label for="progress">Progress:</label>
-            <input id="progress" type="range" min="0" max="100" step="1" value="0">
+            <input id="progress" type="range" min="0" max="100" step="1" value="0" class="settings-range">
         </div>
         <button id="settings" class="settings-btn">Settings</button>
         <input type="file" id="file-input" style="display: none;">
@@ -63,22 +63,22 @@
             <p id="release-date">Release Date</p>
         </div>
         <div class="playlist-controls">
-            <button id="sort-playlist">Sort Playlist</button>
-            <button id="remove-selected">Remove Selected</button>
+            <button id="sort-playlist" class="playlist-control-button">Sort Playlist</button>
+            <button id="remove-selected" class="playlist-control-button">Remove Selected</button>
         </div>
         <div class="now-playing">
             <p id="now-playing">Currently playing: <span id="now-playing-track">None</span></p>
         </div>
         <div class="volume-control">
             <h3>Volume Control</h3>
-            <input id="volume-control" type="range" min="0" max="1" step="0.01" value="1">
+            <input id="volume-control" type="range" min="0" max="1" step="0.01" value="1" class="volume-control-range">
         </div>
         <!-- Mini Player -->
         <div class="mini-player">
             <img id="mini-album-art" src="default-art.jpg" alt="Mini Album Art">
             <div class="mini-controls">
-                <button id="mini-play-pause">Play</button>
-                <button id="mini-next">Next</button>
+                <button id="mini-play-pause" class="mini-control-button">Play</button>
+                <button id="mini-next" class="mini-control-button">Next</button>
             </div>
             <p id="mini-track-title">Track Title</p>
         </div>

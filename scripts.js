@@ -137,61 +137,54 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const startVisualization = () => {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext) {
             analyser = audioContext.createAnalyser();
-            source = audioContext.createMediaElementSource(audio);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
             analyser.fftSize = 256;
             bufferLength = analyser.frequencyBinCount;
             dataArray = new Uint8Array(bufferLength);
+            source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            visualize();
         }
-        requestAnimationFrame(drawVisualizer);
     };
 
-    const stopVisualization = () => {
-        ctx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
-    };
-
-    const drawVisualizer = () => {
-        if (isPlaying) {
-            requestAnimationFrame(drawVisualizer);
-        }
+    const visualize = () => {
+        if (!analyser) return;
+        requestAnimationFrame(visualize);
         analyser.getByteFrequencyData(dataArray);
-        ctx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+        ctx.clearRect(0, 0, visualizerCanvasWidth, visualizerCanvasHeight);
         const barWidth = (visualizerCanvasWidth / bufferLength) * 2.5;
         let barHeight;
         let x = 0;
-
         for (let i = 0; i < bufferLength; i++) {
-            barHeight = dataArray[i] / 2;
-            ctx.fillStyle = `rgb(${barHeight + 100},50,50)`;
-            ctx.fillRect(x, visualizerCanvasHeight - barHeight / 2, barWidth, barHeight);
+            barHeight = dataArray[i];
+            ctx.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+            ctx.fillRect(x, visualizerCanvasHeight - barHeight / 2, barWidth, barHeight / 2);
             x += barWidth + 1;
         }
     };
 
-    const handleFileSelect = () => {
-        const file = fileInput.files[0];
+    const stopVisualization = () => {
+        if (analyser) {
+            analyser.disconnect();
+            analyser = null;
+        }
+    };
+
+    const handleFileSelect = (event) => {
+        const file = event.target.files[0];
         if (file) {
             const url = URL.createObjectURL(file);
-            const newSong = document.createElement('li');
-            newSong.textContent = file.name;
-            newSong.setAttribute('data-src', url);
-            newSong.addEventListener('click', () => {
-                currentIndex = Array.from(playlist.children).indexOf(newSong);
-                loadSong(currentIndex);
-                playSong();
-            });
-            playlist.appendChild(newSong);
-            fileInput.value = ''; // Clear the file input
+            audio.src = url;
+            audio.load();
+            updateUI();
         }
     };
 
     const changeTheme = (theme) => {
-        document.body.classList.toggle('light', theme === 'light');
         document.body.classList.toggle('dark', theme === 'dark');
+        document.body.classList.toggle('light', theme === 'light');
     };
 
     const changeSpeed = (speed) => {
@@ -259,4 +252,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     miniNextBtn.addEventListener('click', nextSong);
+
+    // Initialize audio context
+    if (typeof AudioContext !== 'undefined') {
+        audioContext = new AudioContext();
+    }
 });
